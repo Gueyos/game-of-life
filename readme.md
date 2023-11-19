@@ -6,6 +6,8 @@ Ce projet implémente le célèbre "Jeu de la vie" de Conway en utilisant HTML, 
 
 - Création et affichage d'une grille de jeu.
 - Possibilité de cliquer sur les cellules pour les faire naître ou mourir.
+- Possibilité de dessiner directement sur la grille en cliquant et en maintenant le bouton enfoncé, plutôt que de   cliquer cellule par cellule.
+- Contrôle de la vitesse du jeu avec un curseur.
 - Bouton "Start/Pause" pour lancer ou arrêter l'automate.
 - Bouton "Reload" pour réinitialiser le jeu.
 - Affichage du nombre de générations et de la population actuelle.
@@ -14,7 +16,7 @@ Ce projet implémente le célèbre "Jeu de la vie" de Conway en utilisant HTML, 
 
 1. Cloner le dépôt Git ou télécharger le code source.
 
-    git clone https://github.com/votre-utilisateur/game-of-life.git
+    git clone https://github.com/gueyos/game-of-life.git
 
 2. Ouvrir le fichier `index.html` dans un navigateur web.
 

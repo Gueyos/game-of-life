@@ -4,6 +4,7 @@ const populationElement = document.getElementById('population');
 const buttons = document.querySelectorAll('button')
 const playElement = buttons[0]
 const reloadElement = buttons[1]
+let intervalId;
 
 const rows = 50;
 const cols = 50;
@@ -11,6 +12,28 @@ let isPlaying = false;
 let generation = 0;
 let population = 0;
 let startPopulation = 0;
+let isMouseDown = false;
+
+// check if mouse is down or up to set variable isMouseDown
+gridContainer.addEventListener('mousedown', () => isMouseDown = true);
+gridContainer.addEventListener('mouseup', () => isMouseDown = false);
+
+const speedRange = document.getElementById('speedRange');
+const speedValue = document.getElementById('speedValue');
+
+speedRange.addEventListener('input', () => {
+    const speed = parseInt(speedRange.value);
+    speedValue.textContent = speed;
+    updateSpeed(speed);
+});
+
+// Mettre à jour la vitesse du jeu
+function updateSpeed(speed) {
+    clearInterval(intervalId);
+    if (isPlaying) {
+        play(speed);
+    }
+}
 
 // Create the grid
 const grid = new Array(rows).fill(null).map(() => new Array(cols).fill(false));
@@ -21,10 +44,17 @@ function initializeGrid() {
         for (let col = 0; col < cols; col++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
-            cell.addEventListener('click', () => toggleCell(row, col));
+            cell.addEventListener('mouseover', () => {
+                // Vérifiez si le bouton de la souris est enfoncé avant de changer l'état de la cellule
+                if (isMouseDown) {
+                    toggleCell(row, col);
+                }
+            });
+            cell.addEventListener('mousedown', () => toggleCell(row, col));
             gridContainer.appendChild(cell);
         }
     }
+
 }
 
 // Toggle the state of a cell
@@ -79,7 +109,7 @@ function updateGrid() {
     populationElement.textContent = population + '/' + startPopulation;
 }
 
-// Compter la population totale
+// count the total number of cells
 function countPopulation() {
     return grid.flat().filter(cellState => cellState).length;
 }
@@ -90,7 +120,7 @@ function startGame() {
     isPlaying = !isPlaying;
     if (isPlaying && population > 0) {
         playElement.textContent = 'Pause';
-        play();
+        play(speedRange.value);
     } else {
         playElement.textContent = 'Start';
         stop();
@@ -101,8 +131,8 @@ function reloadGame() {
 }
 
 // Play the game
-function play() {
-    window.intervalId = setInterval(() => {
+function play(speed) {
+    intervalId = setInterval(() => {
         updateGrid()
         generation++;
         generationElement.textContent = generation;
@@ -110,16 +140,15 @@ function play() {
         if (population == 0) {
             clearInterval(intervalId)
         }
-    }, 100);
+    }, speed);
 }
 
 // Pause the game
 function stop() {
     clearInterval(intervalId);
-    isPlaying = false;
 }
 
-// Mettre à jour l'interface utilisateur en fonction de l'état actuel de la grille
+//Update the user interface based on the current state of the grid.
 function updateUI() {
     const cells = document.getElementsByClassName('cell');
     grid.flat().forEach((cellState, index) => {
